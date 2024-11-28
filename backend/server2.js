@@ -1,12 +1,17 @@
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
+const cors = require('cors');
 const app = express();
+app.use(cors());
 const port = 3000;
 
 // Variable to hold the "current" data
-let list = null;
+let list = [];
 let curIndex = 0;
+
+// Player info
+let PlayerList = [];
 
 // Function to read a text file and split it by newlines
 function readTextFile() {
@@ -27,7 +32,13 @@ function readTextFile() {
 
 // Initial load of text file into the "current" variable
 readTextFile().then(data => {
-  list = data;
+  for(let i = 0; i < data.length; i++){
+    list[i] = {
+      name: data[i],
+      points: [],
+      pointsHidden: true
+    }
+  }
   console.log('Text file loaded successfully!');
 }).catch(err => {
   console.error('Error loading text file:', err);
@@ -41,7 +52,7 @@ app.get('/get-current', (req, res) => {
   if (list === null) {
     return res.status(500).json({ error: 'Text file data is not loaded yet' });
   }
-  res.json({ current: list[curIndex], curIndex: curIndex });
+  res.json(list[curIndex]);
 });
 
 // Endpoint to set the "current" data to a specific line based on an index
@@ -49,19 +60,110 @@ app.get('/next', (req, res) => {
     if(curIndex + 1 < list.length) {
         curIndex++;
         console.log("New index: " + curIndex);
+        SetPointVisibility(false);
         res.sendStatus(200);
     }
-    res.sendStatus(400);
+    else{
+      res.sendStatus(400);
+    }
 });
 
 app.get('/prev', (req, res) => {
     if(curIndex >= 1 ){
         curIndex--;
         console.log("New index: " + curIndex);
+        SetPointVisibility(false);
         res.sendStatus(200);
     }
-    res.sendStatus(400);
+    else{
+      res.sendStatus(400);
+    }
 });
+
+// Utility function to generate a unique random ID
+function generateUniqueRandomId() {
+  let id;
+  do {
+      id = Math.floor(1000 + Math.random() * 900000);
+  } while (PlayerList.some(player => player.id === id));
+  return id;
+}
+
+// POST route to add a player
+app.post('/add-player', (req, res) => {
+  const { name } = req.body;
+  console.log(name);
+  if (!name || typeof name !== 'string') {
+      console.log("Fel när " + req.body.name + " skulle gå med.");
+      return res.status(400).json({ error: 'Invalid name provided.' });
+  }
+
+  const playerId = generateUniqueRandomId();
+  const newPlayer = { id: playerId, name };
+
+  PlayerList.push(newPlayer);
+  console.log(req.body.name + " gick med!");
+  console.log(PlayerList);
+  res.status(201).json({player: newPlayer});
+});
+
+// POST route to set points
+app.post('/set-points', (req, res) => {
+  const { playerID, points } = req.body;
+
+  // Validate that `id` and `points` are provided and of correct types
+  if (!playerID || typeof playerID !== 'number' || !PlayerList.some(listedPlayer => playerID == listedPlayer.id)) {
+      console.log("Saknar ID");
+      return res.status(400).json({ error: 'Invalid or missing id.' });
+  }
+
+  if (!points || !(points >= 0 && points <= 5)) {
+      console.log("Fel poänginmatning.");
+      return res.status(400).json({ error: 'Points must be 1, 2, 3, 4, or 5.' });
+  }
+
+  // Access the points array in the current list item
+  const currentPoints = list[curIndex].points;
+
+  // Check if an object with the given `id` already exists
+  const existingIndex = currentPoints.findIndex(entry => entry.id === playerID);
+
+  // Get the current player
+  const currentPlayer = PlayerList.find(player => player.id == playerID);
+
+  if (existingIndex !== -1) {
+      // If the `id` already exists, update its points value
+      currentPoints[existingIndex].points = points;
+  } else {
+      // Otherwise, add a new object with `id` and `points`
+      currentPoints.push({ player: currentPlayer, points });
+  }
+
+  console.log(list[curIndex].points);
+
+  res.status(200).json({ message: 'Points updated successfully!', points: list[curIndex].points });
+});
+
+app.get('/show-points', (req, res) => {
+  SetPointVisibility(true);
+  res.sendStatus(200);
+});
+
+app.get('/hide-points', (req, res) => {
+  SetPointVisibility(false);
+  res.sendStatus(200);
+});
+
+function SetPointVisibility(show){
+  if(show) {
+    list[curIndex].pointsHidden = false;
+    console.log("Visar poäng.");
+  }
+  else {
+    list[curIndex].pointsHidden = true;
+    console.log("Döljer poäng.");
+  }
+}
 
 // Start the server
 app.listen(port, () => {
