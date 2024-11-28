@@ -14,35 +14,7 @@ const options = {
   // body: JSON.stringify({ key: 'value' }) // Include this if you're sending data with POST/PUT requests
 };
 
-let playerName = ref("");
-let playerID = null;
-async function AddPlayer(){
-  const url = serverURL + "add-player";
-  let options = {
-  method: 'POST', // or 'POST', 'PUT', etc.
-  headers: {
-    'Content-Type': 'application/json', // Adjust headers if needed
-    //'Authorization': 'Bearer your-token-here', // Optional, if authentication is required
-  },
-   body: JSON.stringify({ name: playerName.value }) // Include this if you're sending data with POST/PUT requests
-};
 
-  
-  try {
-    const response = await fetch(url, options);
-    if (!response.ok) { // visa felmeddelande, annars gå vidare ur lobbyn
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    const data = await response.json(); // Parse JSON if that's the expected format
-    playerID = data.player.id;
-    console.log(playerID);
-    return data.value; // Return the data to the caller
-  } catch (error) {
-    console.error('Error:', error); // Handle the error
-    throw error; // Optionally, rethrow the error so the caller can handle it
-  }
-}
 
 let playerPoints = ref("0");
 async function SetPoints(){
@@ -124,13 +96,13 @@ function sleep(ms) {
     <h1>{{ CurrentItem.name }}</h1>
     <h1 v-show="!CurrentItem.pointsHidden">{{ CurrentItem.points }}</h1>
 
-    <input type="text" v-model="playerName">
-    <button @click="AddPlayer">Gå med</button>
 
     <br>
     <input type="text" v-model="playerPoints">
     <button @click="SetPoints">Lägg poäng</button>
   </header>
+
+  <router-view></router-view>
 </template>
 
 <style scoped>
