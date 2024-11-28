@@ -4,10 +4,17 @@
     "points": [
       {
         "player": {
-          "id": 498199,
+          "id": 425280,
+          "name": "Måns"
+        },
+        "points": 5
+      },
+      {
+        "player": {
+          "id": 359637,
           "name": "William"
         },
-        "points": 4
+        "points": 3
       }
     ],
     "pointsHidden": true,
@@ -15,7 +22,22 @@
   },
   {
     "name": "RajRaj - Lager than life",
-    "points": [],
+    "points": [
+      {
+        "player": {
+          "id": 359637,
+          "name": "William"
+        },
+        "points": 2
+      },
+      {
+        "player": {
+          "id": 425280,
+          "name": "Måns"
+        },
+        "points": 3
+      }
+    ],
     "pointsHidden": true,
     "exit": false
   },

@@ -167,13 +167,11 @@ app.post('/set-points', (req, res) => {
 });
 
 app.get('/show-points', (req, res) => {
-  showingPoints = true;
   SetPointVisibility(true);
   res.sendStatus(200);
 });
 
 app.get('/hide-points', (req, res) => {
-  showingPoints = false;
   SetPointVisibility(false);
   res.sendStatus(200);
 });
@@ -184,10 +182,12 @@ app.get('/status', (req, res) => {
 
 function SetPointVisibility(show){
   if(show) {
+    showingPoints = true;
     list[curIndex].pointsHidden = false;
     console.log("Visar poäng.");
   }
   else {
+    showingPoints = false;
     list[curIndex].pointsHidden = true;
     console.log("Döljer poäng.");
   }
