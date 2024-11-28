@@ -8,6 +8,7 @@ import { useRouter } from 'vue-router'
   const serverURL = Cookies.get('serverURL');
   const isAdmin = Cookies.get('admin');
   const isHost = Cookies.get('host');
+  const activeVote = ref(-1);
 
 // Define the URL and options for the fetch request
 const options = {
@@ -20,7 +21,6 @@ const options = {
 };
 
 
-const activeVote = ref(0);
 async function SetPoints(points){
   const url = serverURL + "set-points";
   let options = {
@@ -40,8 +40,6 @@ async function SetPoints(points){
     }
 
     const data = await response.json(); // Parse JSON if that's the expected format
-    console.log(data);
-    //activeVote.value = data.points;
     return data.value; // Return the data to the caller
   } catch (error) {
     console.error('Error:', error); // Handle the error
@@ -87,9 +85,8 @@ async function Loop(){
   while(true){
     CurrentItem.value = await GetCurrent();
     const matchingItem = CurrentItem.value.points.find(item => item.player.id == playerID);
-    const points = matchingItem ? matchingItem.points : 0;
+    const points = matchingItem ? matchingItem.points : -1;
     activeVote.value = points;
-    console.log(matchingItem);
     ProcessPoints();
     if(CurrentItem.value.exit){
       // Clear all cookies
