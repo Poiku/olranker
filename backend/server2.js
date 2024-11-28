@@ -13,6 +13,12 @@ let curIndex = 0;
 // Player info
 let PlayerList = [];
 
+// Host info
+let hostID = "";
+
+//
+let showingPoints = false;
+
 // Function to read a text file and split it by newlines
 function readTextFile() {
   const filePath = path.join(__dirname, 'data.txt'); // Path to the text file
@@ -36,7 +42,8 @@ readTextFile().then(data => {
     list[i] = {
       name: data[i],
       points: [],
-      pointsHidden: true
+      pointsHidden: true,
+      exit: false
     }
   }
   console.log('Text file loaded successfully!');
@@ -53,6 +60,15 @@ app.get('/get-current', (req, res) => {
     return res.status(500).json({ error: 'Text file data is not loaded yet' });
   }
   res.json(list[curIndex]);
+});
+
+app.get('/exit', (req, res) => {
+  list[curIndex].exit = true;
+  console.log("Shutting down in 2s...");
+  res.sendStatus(200);
+  setTimeout(() => {
+    process.exit();
+  }, 2000); // Delay for 5 seconds (5000 milliseconds)
 });
 
 // Endpoint to set the "current" data to a specific line based on an index
@@ -85,7 +101,7 @@ function generateUniqueRandomId() {
   let id;
   do {
       id = Math.floor(1000 + Math.random() * 900000);
-  } while (PlayerList.some(player => player.id === id));
+  } while (PlayerList.some(player => player.id === id) && id == 0);
   return id;
 }
 
@@ -111,8 +127,11 @@ app.post('/add-player', (req, res) => {
 app.post('/set-points', (req, res) => {
   const { playerID, points } = req.body;
 
+  if(showingPoints){
+    return res.status(400);
+  }
   // Validate that `id` and `points` are provided and of correct types
-  if (!playerID || typeof playerID !== 'number' || !PlayerList.some(listedPlayer => playerID == listedPlayer.id)) {
+  if (!playerID || !PlayerList.some(listedPlayer => playerID == listedPlayer.id)) {
       console.log("Saknar ID");
       return res.status(400).json({ error: 'Invalid or missing id.' });
   }
@@ -126,7 +145,10 @@ app.post('/set-points', (req, res) => {
   const currentPoints = list[curIndex].points;
 
   // Check if an object with the given `id` already exists
-  const existingIndex = currentPoints.findIndex(entry => entry.id === playerID);
+  const existingIndex = currentPoints.findIndex(entry => entry.player.id == playerID);
+  currentPoints.forEach(element => {
+    console.log(element.player.id);
+  });
 
   // Get the current player
   const currentPlayer = PlayerList.find(player => player.id == playerID);
@@ -145,12 +167,18 @@ app.post('/set-points', (req, res) => {
 });
 
 app.get('/show-points', (req, res) => {
+  showingPoints = true;
   SetPointVisibility(true);
   res.sendStatus(200);
 });
 
 app.get('/hide-points', (req, res) => {
+  showingPoints = false;
   SetPointVisibility(false);
+  res.sendStatus(200);
+});
+
+app.get('/status', (req, res) => {
   res.sendStatus(200);
 });
 
@@ -164,6 +192,18 @@ function SetPointVisibility(show){
     console.log("Döljer poäng.");
   }
 }
+
+// GET endpoint to save the list to a file
+app.get('/save-list', (req, res) => {
+  // Save the `list` variable to a text file
+  fs.writeFile('result.txt', JSON.stringify(list, null, 2), (err) => {
+    if (err) {
+      console.error('Error writing to file:', err);
+      return res.status(500).send('Failed to save the list.');
+    }
+    res.send('List saved to result.txt');
+  });
+});
 
 // Start the server
 app.listen(port, () => {

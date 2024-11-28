@@ -31,13 +31,35 @@ router.beforeEach((to, from, next) => {
   const playerID = Cookies.get('playerID');
   const serverURL = Cookies.get('serverURL')
 
-  if ((!playerID || !serverURL) && to.name !== 'lobby') {
-    // If playerID doesn't exist and it's not the lobby page, redirect to the lobby
+  fetch(serverURL + "status")
+  .then(response => {
+    if (response.ok) {
+      // The server is online and returned a successful response
+      if ((!playerID || !serverURL) && to.name !== 'lobby') {
+        // If playerID doesn't exist and it's not the lobby page, redirect to the lobby
+        next({ name: 'lobby' });
+      } else {
+        // Otherwise, proceed with navigation
+        next();
+      }
+    } else {
+      // The server responded with an error (e.g., 404, 500)
+      // Clear all cookies
+      const allCookies = Cookies.get();
+      for (let cookie in allCookies) {
+        Cookies.remove(cookie);
+      }
+      next({ name: 'lobby' });
+    }
+  })
+  .catch(error => {
+    // If there is an error in the fetch (e.g., network issues)
+    Cookies.remove('playerID');
+    Cookies.remove('serverURL');
     next({ name: 'lobby' });
-  } else {
-    // Otherwise, proceed with navigation
-    next();
-  }
+  });
+
+
 });
 
 export default router;

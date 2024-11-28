@@ -1,0 +1,28 @@
+[
+  {
+    "name": "a",
+    "points": [
+      {
+        "player": {
+          "id": 498199,
+          "name": "William"
+        },
+        "points": 4
+      }
+    ],
+    "pointsHidden": true,
+    "exit": false
+  },
+  {
+    "name": "RajRaj - Lager than life",
+    "points": [],
+    "pointsHidden": true,
+    "exit": false
+  },
+  {
+    "name": "Rajraj - Gallon of Hallon",
+    "points": [],
+    "pointsHidden": true,
+    "exit": false
+  }
+]
