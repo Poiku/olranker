@@ -42,8 +42,7 @@ readTextFile().then(data => {
     list[i] = {
       name: data[i],
       points: [],
-      pointsHidden: true,
-      exit: false
+      pointsHidden: true
     }
   }
   console.log('Text file loaded successfully!');
@@ -63,12 +62,9 @@ app.get('/get-current', (req, res) => {
 });
 
 app.get('/exit', (req, res) => {
-  list[curIndex].exit = true;
-  console.log("Shutting down in 2s...");
+  console.log("Shutting down...");
   res.sendStatus(200);
-  setTimeout(() => {
-    process.exit();
-  }, 2000); // Delay for 5 seconds (5000 milliseconds)
+  process.exit();
 });
 
 // Endpoint to set the "current" data to a specific line based on an index

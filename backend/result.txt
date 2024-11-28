@@ -4,47 +4,59 @@
     "points": [
       {
         "player": {
-          "id": 425280,
-          "name": "Måns"
+          "id": 535309,
+          "name": "William"
         },
-        "points": 5
+        "points": 4
       },
       {
         "player": {
-          "id": 359637,
-          "name": "William"
+          "id": 63392,
+          "name": "Juan"
         },
-        "points": 3
+        "points": 0
       }
     ],
-    "pointsHidden": true,
-    "exit": false
+    "pointsHidden": true
   },
   {
     "name": "RajRaj - Lager than life",
     "points": [
       {
         "player": {
-          "id": 359637,
+          "id": 535309,
           "name": "William"
         },
-        "points": 2
+        "points": 5
       },
       {
         "player": {
-          "id": 425280,
-          "name": "Måns"
+          "id": 63392,
+          "name": "Juan"
         },
-        "points": 3
+        "points": 2
       }
     ],
-    "pointsHidden": true,
-    "exit": false
+    "pointsHidden": true
   },
   {
     "name": "Rajraj - Gallon of Hallon",
-    "points": [],
-    "pointsHidden": true,
-    "exit": false
+    "points": [
+      {
+        "player": {
+          "id": 535309,
+          "name": "William"
+        },
+        "points": 5
+      },
+      {
+        "player": {
+          "id": 63392,
+          "name": "Juan"
+        },
+        "points": 4
+      }
+    ],
+    "pointsHidden": false
   }
 ]

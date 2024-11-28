@@ -43,6 +43,7 @@ async function SetPoints(points){
     return data.value; // Return the data to the caller
   } catch (error) {
     console.error('Error:', error); // Handle the error
+    ExitSession();
     throw error; // Optionally, rethrow the error so the caller can handle it
   }
 }
@@ -70,6 +71,7 @@ async function GetCurrent() {
     return data; // Return the data to the caller
   } catch (error) {
     console.error('Error:', error); // Handle the error
+    ExitSession();
     throw error; // Optionally, rethrow the error so the caller can handle it
   }
 }
@@ -77,8 +79,7 @@ async function GetCurrent() {
 let CurrentItem = ref({
   name: null,
   points: null,
-  pointsHidden: true,
-  exit: false
+  pointsHidden: true
 });
 Loop();
 async function Loop(){
@@ -88,19 +89,20 @@ async function Loop(){
     const points = matchingItem ? matchingItem.points : -1;
     activeVote.value = points;
     ProcessPoints();
-    if(CurrentItem.value.exit){
-      // Clear all cookies
-      const allCookies = Cookies.get();
-      for (let cookie in allCookies) {
-        Cookies.remove(cookie);
-      }
-
-      router.push('/lobby');
-    }
 
     //console.log(CurrentItem);
     await sleep(100);
   }
+}
+
+function ExitSession(){
+  // Clear all cookies
+  const allCookies = Cookies.get();
+  for (let cookie in allCookies) {
+    Cookies.remove(cookie);
+  }
+
+  router.push('/lobby');
 }
 
 let CurrentPoints = ref("");
