@@ -126,7 +126,7 @@ app.post('/add-player', (req, res) => {
 // POST route to set points
 app.post('/set-points', (req, res) => {
   const { playerID, points } = req.body;
-
+  console.log(points);
   if(showingPoints){
     return res.status(400);
   }
@@ -136,10 +136,10 @@ app.post('/set-points', (req, res) => {
       return res.status(400).json({ error: 'Invalid or missing id.' });
   }
 
-  if (!points || !(points >= 0 && points <= 5)) {
+  /*if (!points || (points < 0 || points > 5)) {
       console.log("Fel poänginmatning.");
       return res.status(400).json({ error: 'Points must be 1, 2, 3, 4, or 5.' });
-  }
+  }*/
 
   // Access the points array in the current list item
   const currentPoints = list[curIndex].points;
@@ -163,7 +163,7 @@ app.post('/set-points', (req, res) => {
 
   console.log(list[curIndex].points);
 
-  res.status(200).json({ message: 'Points updated successfully!', points: list[curIndex].points });
+  res.status(200).json({ message: 'Points updated successfully!', points });
 });
 
 app.get('/show-points', (req, res) => {

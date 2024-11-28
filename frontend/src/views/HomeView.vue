@@ -20,7 +20,7 @@ const options = {
 };
 
 
-
+const activeVote = ref(0);
 async function SetPoints(points){
   const url = serverURL + "set-points";
   let options = {
@@ -40,6 +40,8 @@ async function SetPoints(points){
     }
 
     const data = await response.json(); // Parse JSON if that's the expected format
+    console.log(data);
+    //activeVote.value = data.points;
     return data.value; // Return the data to the caller
   } catch (error) {
     console.error('Error:', error); // Handle the error
@@ -84,6 +86,10 @@ Loop();
 async function Loop(){
   while(true){
     CurrentItem.value = await GetCurrent();
+    const matchingItem = CurrentItem.value.points.find(item => item.player.id == playerID);
+    const points = matchingItem ? matchingItem.points : 0;
+    activeVote.value = points;
+    console.log(matchingItem);
     ProcessPoints();
     if(CurrentItem.value.exit){
       // Clear all cookies
@@ -96,7 +102,7 @@ async function Loop(){
     }
 
     //console.log(CurrentItem);
-    await sleep(1000);
+    await sleep(100);
   }
 }
 
@@ -108,7 +114,7 @@ async function ProcessPoints(){
   CurrentPoints.value = averagePoints;
   Voters.value = CurrentItem.value.points
   .map(item => `${item.player.name} gav ${item.points} poäng`) // Format each item
-  .join('\n\n'); // Join the formatted strings with a newline character
+  .join('\n'); // Join the formatted strings with a newline character
 }
 
 function sleep(ms) {
@@ -118,20 +124,23 @@ function sleep(ms) {
 </script>
 
 <template>
-  <header>
-    <h1>{{ CurrentItem.name }}</h1>
-    <div v-show="!CurrentItem.pointsHidden">
-      <h1>{{ CurrentPoints }}</h1>
-      <h1 v-if="isHost">{{ Voters }}</h1>
+  <div class="view">
+    <div class="info">
+      <h1>{{ CurrentItem.name }}</h1>
+      <div v-show="!CurrentItem.pointsHidden" class="points">
+        <h2>{{ CurrentPoints }}</h2>
+        <h2 v-if="isHost" style="white-space: pre-line; text-align: center;">{{ Voters }}</h2>
+      </div>
     </div>
-    
     <div v-if="!isHost">
-      <button @click="SetPoints(0)">0</button>
-      <button @click="SetPoints(1)">1</button>
-      <button @click="SetPoints(2)">2</button>
-      <button @click="SetPoints(3)">3</button>
-      <button @click="SetPoints(4)">4</button>
-      <button @click="SetPoints(5)">5</button>
+      <button
+      v-for="num in 6"
+      :key="num"
+      @click="SetPoints(num - 1)"
+      :style="{ backgroundColor: activeVote === num - 1 ? 'lightblue' : '' }"
+    >
+      {{ num - 1 }}
+    </button>
     </div>
     <div v-if="isAdmin">
       <button @click="SendAdminCommand('exit')">Stäng av</button>
@@ -141,9 +150,29 @@ function sleep(ms) {
       <button @click="SendAdminCommand('hide-points')">Dölj poäng</button>
       <button @click="SendAdminCommand('save-list')">Spara lista</button>
     </div>
-  </header>
+  </div>
 </template>
 
 <style scoped>
+.view{
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.info, .points{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+h1{
+  font-size: 100px;
+}
+
+
 </style>
 
