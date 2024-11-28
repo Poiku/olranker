@@ -33,8 +33,8 @@ async function AddPlayer(){
     Cookies.set('playerID', data.player.id, { expires: 1 });
     Cookies.set('serverURL', baseURL, {expires: 1});
     if(playerName.value == "William") Cookies.set('admin', true);
-    if(playerName.value == "host") router.push('/host');
-    else router.push('/');
+    else if(playerName.value == "host") Cookies.set('host', true);
+    router.push('/');
     return data.value; // Return the data to the caller
   } catch (error) {
     console.error('Error:', error); // Handle the error

@@ -7,6 +7,7 @@ import { useRouter } from 'vue-router'
   const playerID = Cookies.get('playerID');
   const serverURL = Cookies.get('serverURL');
   const isAdmin = Cookies.get('admin');
+  const isHost = Cookies.get('host');
 
 // Define the URL and options for the fetch request
 const options = {
@@ -121,16 +122,17 @@ function sleep(ms) {
     <h1>{{ CurrentItem.name }}</h1>
     <div v-show="!CurrentItem.pointsHidden">
       <h1>{{ CurrentPoints }}</h1>
-      <h1>{{ Voters }}</h1>
+      <h1 v-if="isHost">{{ Voters }}</h1>
     </div>
     
-    <button @click="SetPoints(0)">0</button>
-    <button @click="SetPoints(1)">1</button>
-    <button @click="SetPoints(2)">2</button>
-    <button @click="SetPoints(3)">3</button>
-    <button @click="SetPoints(4)">4</button>
-    <button @click="SetPoints(5)">5</button>
-    
+    <div v-if="!isHost">
+      <button @click="SetPoints(0)">0</button>
+      <button @click="SetPoints(1)">1</button>
+      <button @click="SetPoints(2)">2</button>
+      <button @click="SetPoints(3)">3</button>
+      <button @click="SetPoints(4)">4</button>
+      <button @click="SetPoints(5)">5</button>
+    </div>
     <div v-if="isAdmin">
       <button @click="SendAdminCommand('exit')">Stäng av</button>
       <button @click="SendAdminCommand('next')">Nästa öl</button>
