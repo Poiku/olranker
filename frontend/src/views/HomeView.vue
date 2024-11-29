@@ -4,11 +4,11 @@ import Cookies from 'js-cookie'; // Import js-cookie to handle cookies
 import { useRouter } from 'vue-router'
 import BigButton from '../components/BigButton.vue'
 import { decimalToBase64 } from '@/assets/base-convert';
+import Controls from '../components/Controls.vue'
   
   const router = useRouter();
   const playerID = Cookies.get('playerID');
   const serverURL = Cookies.get('serverURL');
-  const isAdmin = Cookies.get('admin');
   const isHost = Cookies.get('host');
   const activeVote = ref(-1);
 
@@ -49,9 +49,7 @@ async function SetPoints(points){
   }
 }
 
-async function SendAdminCommand(command){
-  fetch(serverURL + command, options);
-}
+
 
 async function GetCurrent() {
   if(serverURL != null){
@@ -182,16 +180,7 @@ async function GetServer(){
       {{ num - 1 }}
       </BigButton>
     </div>
-    <div v-show="isAdmin">
-      <button @click="SendAdminCommand('exit')">Stäng av</button>
-      <button @click="SendAdminCommand('next')">Nästa öl</button>
-      <button @click="SendAdminCommand('prev')">Förra öl</button>
-      <button @click="SendAdminCommand('show-points')">Visa poäng</button>
-      <button @click="SendAdminCommand('hide-points')">Dölj poäng</button>
-      <button @click="SendAdminCommand('save-list')">Spara lista</button>
-      <br>
-      <br>
-    </div>
+    <Controls />
   </div>
 </template>
 
