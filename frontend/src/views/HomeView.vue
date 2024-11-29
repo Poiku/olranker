@@ -45,7 +45,6 @@ async function SetPoints(points){
     return data.value; // Return the data to the caller
   } catch (error) {
     console.error('Error:', error); // Handle the error
-    ExitSession();
     throw error; // Optionally, rethrow the error so the caller can handle it
   }
 }
@@ -162,16 +161,16 @@ async function GetServer(){
 <template>
   <div class="view">
     <div class="info">
-      <h1>{{ CurrentItem.name }}</h1>
+      <h1 id="name">{{ CurrentItem.name }}</h1>
       <h1 v-if="isHost" v-show="CurrentItem.id == 0">Kod: {{ServerCode}}</h1>
 
       <div v-show="!CurrentItem.pointsHidden" class="points">
-        <h2>Poäng: {{ CurrentPoints }} / 5</h2>
-        <h2 v-if="isHost" style="white-space: pre-line; text-align: center;">{{ Voters }}</h2>
+        <h2 id="points">Poäng: {{ CurrentPoints }} / 5</h2>
+        <h3 v-if="isHost" style="white-space: pre-line; text-align: center;">{{ Voters }}</h3>
       </div>
-      
+
     </div>
-    <div v-if="!isHost" v-show="CurrentItem.id != 0" class="vote-buttons" :style="{ 'margin-top': CurrentItem.pointsHidden ? '59px' : '-10px' }">
+    <div v-if="!isHost" v-show="CurrentItem.id != 0" class="vote-buttons" :style="{ 'margin-top': CurrentItem.pointsHidden ? '34px' : '-10px' }">
       <BigButton class="votebutton"
       v-for="num in 6"
       :key="num"
@@ -182,7 +181,7 @@ async function GetServer(){
       {{ num - 1 }}
       </BigButton>
     </div>
-    <div v-if="isAdmin">
+    <div v-show="isAdmin">
       <button @click="SendAdminCommand('exit')">Stäng av</button>
       <button @click="SendAdminCommand('next')">Nästa öl</button>
       <button @click="SendAdminCommand('prev')">Förra öl</button>
@@ -199,6 +198,7 @@ async function GetServer(){
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  min-height: 100vh;
 }
 
 .info, .points{
@@ -209,12 +209,30 @@ async function GetServer(){
 }
 
 h1{
+  margin-top: 0;
   font-size: 100px;
   font-family: interblack;
 }
 
+
+h2{
+  font-size: 70px;
+  font-family: interblack;
+}
+h3{
+  margin-top: 0;
+  font-size: 30px;
+}
 .votebutton{
   margin: 20px;
+}
+
+#name{
+  margin-bottom: 0;
+}
+
+#points{
+  margin-top: 0;
 }
 
 .vote-buttons{
@@ -230,7 +248,15 @@ h1{
   }
 
   .info{
-    margin-top: 60px;
+    margin-top: 30px;
+  }
+  
+  #name{
+    margin-bottom: 20px;
+  }
+
+  #points{
+    margin-bottom: 20px;
   }
 
   h1{
@@ -238,6 +264,12 @@ h1{
     text-align: center;
     margin: 0;
   }
+
+  h2{
+    font-size: 20px;
+  }
 }
+
+
 </style>
 

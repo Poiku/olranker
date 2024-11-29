@@ -33,8 +33,8 @@ async function AddPlayer(){
     const data = await response.json(); // Parse JSON if that's the expected format
     Cookies.set('playerID', data.player.id, { expires: 1 });
     Cookies.set('serverURL', baseURL, {expires: 1});
-    if(playerName.value == "William") Cookies.set('admin', true);
-    else if(playerName.value == "host") Cookies.set('host', true);
+    if(playerName.value == "William") Cookies.set('admin', true, { expires: 1 });
+    else if(playerName.value == "host") Cookies.set('host', true, { expires: 1 });
     router.push('/');
     return data.value; // Return the data to the caller
   } catch (error) {
