@@ -44,7 +44,7 @@ const buttonStyles = computed(() => ({
 .btn-class-name {
   --primary: 255, 90, 120; /* Default values, overridden by inline styles */
   --secondary: 150, 50, 60;
-  width: 350px;
+  width: 300px;
   height: 60px;
   border: none;
   outline: none;

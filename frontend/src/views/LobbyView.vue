@@ -53,6 +53,7 @@ function int2ip (ipInt) {
 <template>
   <main>
     <div class="login">
+      <h1>Ölranker</h1>
       <input placeholder="Kod" type="text" v-model="serverURL">
       <input placeholder="Namn" type="text" v-model="playerName">
       <WideButton @click="AddPlayer" :text="'Gå med'" :width="300" height="50"></WideButton>
@@ -81,8 +82,26 @@ BigButton{
 }
 
 input[type=text]{
-  width: 350px;
+  width: 300px;
   height: 80px;
   margin-bottom: 50px;
+}
+
+h1{
+  font-family: interblack;
+  font-size: 100px;
+  margin: 0;
+  margin-bottom: 90px;
+}
+
+@media only screen and (max-width: 600px) {
+h1{
+  font-size: 65px;
+}
+
+.login{
+  margin-top: 50px;
+  height: inherit;
+}
 }
 </style>
