@@ -111,7 +111,7 @@ let Voters = ref("");
 async function ProcessPoints(){
   const totalPoints = CurrentItem.value.points.reduce((sum, item) => sum + item.points, 0);
   const averagePoints = totalPoints / CurrentItem.value.points.length;
-  CurrentPoints.value = averagePoints;
+  CurrentPoints.value = Math.round(averagePoints * 10)/10;
   Voters.value = CurrentItem.value.points
   .map(item => `${item.player.name} gav ${item.points} poäng`) // Format each item
   .join('\n'); // Join the formatted strings with a newline character
@@ -188,6 +188,8 @@ async function GetServer(){
       <button @click="SendAdminCommand('show-points')">Visa poäng</button>
       <button @click="SendAdminCommand('hide-points')">Dölj poäng</button>
       <button @click="SendAdminCommand('save-list')">Spara lista</button>
+      <br>
+      <br>
     </div>
   </div>
 </template>
