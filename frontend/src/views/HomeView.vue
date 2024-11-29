@@ -54,6 +54,7 @@ async function SendAdminCommand(command){
 }
 
 async function GetCurrent() {
+  if(serverURL == null) return
   const url = serverURL + "get-current";
   const options = {
     method: 'GET', // Adjust as needed
@@ -151,7 +152,6 @@ async function GetServer(){
     return data; // Return the data to the caller
   } catch (error) {
     console.error('Error:', error); // Handle the error
-    ExitSession();
     throw error; // Optionally, rethrow the error so the caller can handle it
   }
 }
