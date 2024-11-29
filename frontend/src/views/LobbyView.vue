@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import Cookies from 'js-cookie'; // Import js-cookie to handle cookies
 import { useRouter } from 'vue-router'
 import { base64ToDecimal } from '@/assets/base-convert';
+import WideButton from '@/components/WideButton.vue';
 
 const router = useRouter();
 
@@ -51,9 +52,37 @@ function int2ip (ipInt) {
 
 <template>
   <main>
-    <input type="text" v-model="serverURL">
-    <input type="text" v-model="playerName">
-    <button @click="AddPlayer">Gå med</button>
-    <div>{{ ip }}</div>
+    <div class="login">
+      <input placeholder="Kod" type="text" v-model="serverURL">
+      <input placeholder="Namn" type="text" v-model="playerName">
+      <WideButton @click="AddPlayer" :text="'Gå med'" :width="300" height="50"></WideButton>
+      <div>{{ ip }}</div>
+    </div>
   </main>
 </template>
+
+<style scoped>
+BigButton{
+  margin-top: 200px;
+}
+
+::placeholder, input[type=text] {
+   text-align: center; 
+   font-size: 20px;
+   font-family: interblack;
+}
+
+.login{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+input[type=text]{
+  width: 350px;
+  height: 80px;
+  margin-bottom: 50px;
+}
+</style>
