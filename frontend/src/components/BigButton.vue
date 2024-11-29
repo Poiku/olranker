@@ -51,7 +51,7 @@
     cursor: pointer;
     user-select: none;
     touch-action: manipulation;
-    outline: 10px solid rgb(var(--primary), .5);
+    /* outline: 10px solid rgb(var(--primary), .5); */ /* buggad på ios innan jan 2023 */
     border-radius: 100%;
     position: relative;
     transition: .3s;
@@ -82,7 +82,7 @@
     align-items: center;
     font-size: 1.2rem;
     font-weight: 600;
-    font-family: inherit;
+    font-family: interblack;
     transform: translateY(-15%);
     transition: .15s;
     color: rgb(var(--secondary));

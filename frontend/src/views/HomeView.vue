@@ -132,7 +132,7 @@ function sleep(ms) {
         <h2 v-if="isHost" style="white-space: pre-line; text-align: center;">{{ Voters }}</h2>
       </div>
     </div>
-    <div v-if="!isHost" class="vote-buttons" :style="{ 'margin-top': CurrentItem.pointsHidden ? '100px' : '20px' }">
+    <div v-if="!isHost" class="vote-buttons" :style="{ 'margin-top': CurrentItem.pointsHidden ? '59px' : '-10px' }">
       <BigButton class="votebutton"
       v-for="num in 6"
       :key="num"
@@ -171,6 +171,7 @@ function sleep(ms) {
 
 h1{
   font-size: 100px;
+  font-family: interblack;
 }
 
 .votebutton{
@@ -181,6 +182,7 @@ h1{
   display: flex;
   flex-direction: column-reverse;
   margin-top: 20px;
+  margin-bottom: 40px;
 }
 
 @media only screen and (max-width: 600px) {
@@ -193,7 +195,9 @@ h1{
   }
 
   h1{
-    font-size: 25px;
+    font-size: 50px;
+    text-align: center;
+    margin: 0;
   }
 }
 </style>
