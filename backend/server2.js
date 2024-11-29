@@ -130,9 +130,8 @@ app.post('/add-player', (req, res) => {
 // POST route to set points
 app.post('/set-points', (req, res) => {
   const { playerID, points } = req.body;
-  console.log(points);
   if(showingPoints){
-    return res.status(400);
+    return res.json("cant change rn");
   }
   // Validate that `id` and `points` are provided and of correct types
   if (!playerID || !PlayerList.some(listedPlayer => playerID == listedPlayer.id)) {
@@ -150,9 +149,6 @@ app.post('/set-points', (req, res) => {
 
   // Check if an object with the given `id` already exists
   const existingIndex = currentPoints.findIndex(entry => entry.player.id == playerID);
-  currentPoints.forEach(element => {
-    console.log(element.player.id);
-  });
 
   // Get the current player
   const currentPlayer = PlayerList.find(player => player.id == playerID);
