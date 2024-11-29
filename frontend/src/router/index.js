@@ -29,35 +29,44 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   // Check if the destination is not the lobby and if playerID exists in the cookie
   const playerID = Cookies.get('playerID');
-  const serverURL = Cookies.get('serverURL')
-
-  fetch(serverURL + "status")
-  .then(response => {
-    if (response.ok) {
-      // The server is online and returned a successful response
-      if ((!playerID || !serverURL) && to.name !== 'lobby') {
-        // If playerID doesn't exist and it's not the lobby page, redirect to the lobby
-        next({ name: 'lobby' });
-      } else {
-        // Otherwise, proceed with navigation
-        next();
-      }
-    } else {
-      // The server responded with an error (e.g., 404, 500)
-      // Clear all cookies
-      const allCookies = Cookies.get();
-      for (let cookie in allCookies) {
-        Cookies.remove(cookie);
-      }
-      next({ name: 'lobby' });
-    }
-  })
-  .catch(error => {
-    // If there is an error in the fetch (e.g., network issues)
-    Cookies.remove('playerID');
-    Cookies.remove('serverURL');
+  const serverURL = Cookies.get('serverURL');
+  
+  if(to.name == "lobby"){
+    clearCookies();
+    next();
+  }
+  else if (!playerID || !serverURL) {
+    // If playerID or serverURL is missing, redirect to lobby
     next({ name: 'lobby' });
-  });
+  } else {
+    // If serverURL is present, try fetching the server status
+    fetch(serverURL + "status")
+      .then(response => {
+        if (response.ok) {
+          // Server is online, proceed to the next page
+          next();
+        } else {
+          // Server returned an error, clear cookies and go to lobby
+          clearCookies();
+          next({ name: 'lobby' });
+        }
+      })
+      .catch(error => {
+        // Fetch failed (e.g., network error), clear cookies and go to lobby
+        clearCookies();
+        next({ name: 'lobby' });
+      });
+  }
+  
+  function clearCookies() {
+    const allCookies = Cookies.get();
+    for (let cookie in allCookies) {
+      Cookies.remove(cookie);
+    }
+  }
+  
+  
+
 
 
 });
