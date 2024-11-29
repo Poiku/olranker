@@ -54,27 +54,28 @@ async function SendAdminCommand(command){
 }
 
 async function GetCurrent() {
-  if(serverURL == null) return
-  const url = serverURL + "get-current";
-  const options = {
-    method: 'GET', // Adjust as needed
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  };
+  if(serverURL != null){
+    const url = serverURL + "get-current";
+    const options = {
+      method: 'GET', // Adjust as needed
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
 
-  try {
-    const response = await fetch(url, options);
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+    try {
+      const response = await fetch(url, options);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json(); // Parse JSON if that's the expected format
+      if(data.exit) ExitSession();
+      return data; // Return the data to the caller
+    } catch (error) {
+      console.error('Error:', error); // Handle the error
+      throw error; // Optionally, rethrow the error so the caller can handle it
     }
-
-    const data = await response.json(); // Parse JSON if that's the expected format
-    return data; // Return the data to the caller
-  } catch (error) {
-    console.error('Error:', error); // Handle the error
-    ExitSession();
-    throw error; // Optionally, rethrow the error so the caller can handle it
   }
 }
 
@@ -104,7 +105,7 @@ function ExitSession(){
     Cookies.remove(cookie);
   }
 
-  router.push('/lobby');
+  router.push('/lobby'); 
 }
 
 let CurrentPoints = ref("");

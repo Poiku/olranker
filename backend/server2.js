@@ -19,6 +19,9 @@ let hostID = "";
 //
 let showingPoints = false;
 
+//
+let exit = false;
+
 // Function to read a text file and split it by newlines
 function readTextFile() {
   const filePath = path.join(__dirname, 'data.txt'); // Path to the text file
@@ -63,17 +66,28 @@ app.use(express.json());
 
 // Endpoint to get the current data (entire file content as an array of lines)
 app.get('/get-current', (req, res) => {
-  if (list === null) {
+  if(exit){
+    res.json({exit});
+  }
+  else if (list === null) {
     return res.status(500).json({ error: 'Text file data is not loaded yet' });
   }
-  res.json(list[curIndex]);
+  else{
+    res.json(list[curIndex]);
+  }
 });
 
 app.get('/exit', (req, res) => {
   console.log("Shutting down...");
+  exit = true; // assuming this flag is used elsewhere to manage app state
   res.sendStatus(200);
-  process.exit();
+  
+  // Set a timeout to shut down the process after 5 seconds
+  setTimeout(() => {
+    process.exit();
+  }, 5000);
 });
+
 
 // Endpoint to set the "current" data to a specific line based on an index
 app.get('/next', (req, res) => {
