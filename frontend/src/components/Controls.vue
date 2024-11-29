@@ -12,19 +12,25 @@
 </template>
 
 <script setup>
+import { ref } from 'vue';
 import Cookies from 'js-cookie'; // Import js-cookie to handle cookies
-  const isAdmin = Cookies.get('admin');
-  const serverURL = Cookies.get('serverURL');
-  const options = {
+
+  setTimeout(() => {
+    const isAdmin = Cookies.get('admin');
+    const serverURL = Cookies.get('serverURL');
+    console.log("är admin? " + isAdmin);
+    const options = {
     method: 'GET', // or 'POST', 'PUT', etc.
     headers: {
         'Content-Type': 'application/json', // Adjust headers if needed
         //'Authorization': 'Bearer your-token-here', // Optional, if authentication is required
     },
     // body: JSON.stringify({ key: 'value' }) // Include this if you're sending data with POST/PUT requests
-};
+    };
 
-  async function SendAdminCommand(command){
-  fetch(serverURL + command, options);
-  }
+    async function SendAdminCommand(command){
+    fetch(serverURL + command, options);
+    }
+  }, 10000);
+
 </script>

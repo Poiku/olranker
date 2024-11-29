@@ -96,6 +96,10 @@ async function Loop(){
   }
 }
 
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 function ExitSession(){
   // Clear all cookies
   const allCookies = Cookies.get();
@@ -115,10 +119,6 @@ async function ProcessPoints(){
   Voters.value = CurrentItem.value.points
   .map(item => `${item.player.name} gav ${item.points} poäng`) // Format each item
   .join('\n'); // Join the formatted strings with a newline character
-}
-
-function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 let ServerCode = ref("ingen ip");

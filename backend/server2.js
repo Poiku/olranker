@@ -194,6 +194,10 @@ app.get('/status', (req, res) => {
   res.sendStatus(200);
 });
 
+app.get('/get-player-list', (req, res) => {
+  res.json(PlayerList);
+});
+
 function SetPointVisibility(show){
   if(show) {
     showingPoints = true;
