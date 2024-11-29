@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import Cookies from 'js-cookie'; // Import js-cookie to handle cookies
 import { useRouter } from 'vue-router'
 import BigButton from '../components/BigButton.vue'
+import { decimalToBase64 } from '@/assets/base-convert';
   
   const router = useRouter();
   const playerID = Cookies.get('playerID');
@@ -121,18 +122,56 @@ function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+let ServerCode = ref("ingen ip");
+async function Host(){
+  if(isHost){
+  let ip = await GetServer();
+  console.log(ip.ip);
+  let code = decimalToBase64(ip.ip);
+  ServerCode.value = code;
+  console.log(code);
+}
+}
+Host();
+async function GetServer(){
+  const url = "http://localhost:3000/get-ip";
+  const options = {
+    method: 'GET', // Adjust as needed
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  };
+
+  try {
+    const response = await fetch(url, options);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json(); // Parse JSON if that's the expected format
+    return data; // Return the data to the caller
+  } catch (error) {
+    console.error('Error:', error); // Handle the error
+    ExitSession();
+    throw error; // Optionally, rethrow the error so the caller can handle it
+  }
+}
+
 </script>
 
 <template>
   <div class="view">
     <div class="info">
       <h1>{{ CurrentItem.name }}</h1>
+      <h1 v-if="isHost" v-show="CurrentItem.id == 0">Kod: {{ServerCode}}</h1>
+
       <div v-show="!CurrentItem.pointsHidden" class="points">
         <h2>Poäng: {{ CurrentPoints }} / 5</h2>
         <h2 v-if="isHost" style="white-space: pre-line; text-align: center;">{{ Voters }}</h2>
       </div>
+      
     </div>
-    <div v-if="!isHost" class="vote-buttons" :style="{ 'margin-top': CurrentItem.pointsHidden ? '59px' : '-10px' }">
+    <div v-if="!isHost" v-show="CurrentItem.id != 0" class="vote-buttons" :style="{ 'margin-top': CurrentItem.pointsHidden ? '59px' : '-10px' }">
       <BigButton class="votebutton"
       v-for="num in 6"
       :key="num"

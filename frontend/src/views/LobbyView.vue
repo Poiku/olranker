@@ -2,17 +2,18 @@
 import { ref } from 'vue'
 import Cookies from 'js-cookie'; // Import js-cookie to handle cookies
 import { useRouter } from 'vue-router'
+import { base64ToDecimal } from '@/assets/base-convert';
 
 const router = useRouter();
 
 let playerName = ref("");
 let serverURL = ref("");
+let ip = ref("");
 
 async function AddPlayer(){
-  const baseURL = "http://" + serverURL.value + ":3000/";
-
+  ip.value = int2ip(base64ToDecimal(serverURL.value));
+  const baseURL = "http://" + (serverURL.value == "localhost" ? "localhost" : ip.value) + ":3000/";
   const url = baseURL + "add-player";
-  console.log(url);
   let options = {
   method: 'POST', // or 'POST', 'PUT', etc.
   headers: {
@@ -38,8 +39,13 @@ async function AddPlayer(){
     return data.value; // Return the data to the caller
   } catch (error) {
     console.error('Error:', error); // Handle the error
+    ip.value = error;
     throw error; // Optionally, rethrow the error so the caller can handle it
   }
+}
+
+function int2ip (ipInt) {
+    return ( (ipInt>>>24) +'.' + (ipInt>>16 & 255) +'.' + (ipInt>>8 & 255) +'.' + (ipInt & 255) );
 }
 </script>
 
@@ -48,5 +54,6 @@ async function AddPlayer(){
     <input type="text" v-model="serverURL">
     <input type="text" v-model="playerName">
     <button @click="AddPlayer">Gå med</button>
+    <div>{{ ip }}</div>
   </main>
 </template>

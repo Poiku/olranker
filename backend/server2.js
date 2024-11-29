@@ -38,14 +38,22 @@ function readTextFile() {
 
 // Initial load of text file into the "current" variable
 readTextFile().then(data => {
-  for(let i = 0; i < data.length; i++){
+  list[0] = {
+    id: 0,
+    name: " ",
+    points: [],
+    pointsHidden: true
+  }
+  for(let i = 1; i < data.length + 1; i++){
     list[i] = {
-      name: data[i],
+      id: i,
+      name: data[i - 1],
       points: [],
       pointsHidden: true
     }
   }
   console.log('Text file loaded successfully!');
+  console.log(list);
 }).catch(err => {
   console.error('Error loading text file:', err);
 });
@@ -200,6 +208,14 @@ app.get('/save-list', (req, res) => {
     res.send('List saved to result.txt');
   });
 });
+
+var ip = require("ip");
+console.dir(ip.address());
+
+app.get('/get-ip', (req, res) => {
+  res.json({ip: ip.toLong(ip.address())})
+});
+
 
 // Start the server
 app.listen(port, () => {
