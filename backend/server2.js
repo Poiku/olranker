@@ -22,6 +22,9 @@ let showingPoints = false;
 //
 let exit = false;
 
+//
+let showResult = false;
+
 // Function to read a text file and split it by newlines
 function readTextFile() {
   const filePath = path.join(__dirname, 'data.txt'); // Path to the text file
@@ -43,7 +46,7 @@ function readTextFile() {
 readTextFile().then(data => {
   list[0] = {
     id: 0,
-    name: " ",
+    name: "Ansluten",
     points: [],
     pointsHidden: true
   }
@@ -69,11 +72,26 @@ app.get('/get-current', (req, res) => {
   if(exit){
     res.json({exit});
   }
+  else if(showResult){
+    res.json({showResult});
+  }
   else if (list === null) {
     return res.status(500).json({ error: 'Text file data is not loaded yet' });
   }
   else{
     res.json(list[curIndex]);
+  }
+});
+
+app.get('/get-list', (req, res) => {
+  if (list === null) {
+    return res.status(500).json({ error: 'Text file data is not loaded yet' });
+  }
+  else if(!showResult){
+    res.json({showResult});
+  }
+  else{
+    res.json(list.slice(1));  // slice(1) removes the first element (index 0)  
   }
 });
 
@@ -112,6 +130,12 @@ app.get('/prev', (req, res) => {
     else{
       res.sendStatus(400);
     }
+});
+
+app.get('/toggle-show-result', (req, res) => {
+  showResult = !showResult;
+  console.log("Visar resultat: " + showResult);
+  res.sendStatus(200);
 });
 
 // Utility function to generate a unique random ID

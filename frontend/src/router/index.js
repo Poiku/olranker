@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import HomeView from '../views/HomeView.vue';
 import LobbyView from '../views/LobbyView.vue';
 import HostView from '../views/HostView.vue';
+import ResultView from '@/views/ResultView.vue';
 import Cookies from 'js-cookie'; // Import js-cookie to handle cookies
 
 const router = createRouter({
@@ -21,6 +22,11 @@ const router = createRouter({
       path: '/host',
       name: 'host',
       component: HostView,
+    },
+    {
+      path: '/result',
+      name: 'result',
+      component: ResultView,
     },
   ],
 });

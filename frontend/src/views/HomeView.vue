@@ -69,7 +69,8 @@ async function GetCurrent() {
 
       const data = await response.json(); // Parse JSON if that's the expected format
       if(data.exit) ExitSession();
-      return data; // Return the data to the caller
+      else if(data.showResult) router.push('/result')
+      else return data; // Return the data to the caller
     } catch (error) {
       console.error('Error:', error); // Handle the error
       throw error; // Optionally, rethrow the error so the caller can handle it
@@ -85,12 +86,14 @@ let CurrentItem = ref({
 Loop();
 async function Loop(){
   while(true){
-    CurrentItem.value = await GetCurrent();
-    const matchingItem = CurrentItem.value.points.find(item => item.player.id == playerID);
-    const points = matchingItem ? matchingItem.points : -1;
-    activeVote.value = points;
-    ProcessPoints();
-
+    const nextItem = await GetCurrent();
+    if(nextItem != null){
+      CurrentItem.value = nextItem;
+      const matchingItem = CurrentItem.value.points.find(item => item.player.id == playerID);
+      const points = matchingItem ? matchingItem.points : -1;
+      activeVote.value = points;
+      ProcessPoints();
+    }
     //console.log(CurrentItem);
     await sleep(100);
   }

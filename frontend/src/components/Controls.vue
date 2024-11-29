@@ -6,6 +6,7 @@
       <button @click="SendAdminCommand('show-points')">Visa poäng</button>
       <button @click="SendAdminCommand('hide-points')">Dölj poäng</button>
       <button @click="SendAdminCommand('save-list')">Spara lista</button>
+      <button @click="SendAdminCommand('toggle-show-result')">Visa/dölj resultat</button>
       <br>
       <br>
     </div>
