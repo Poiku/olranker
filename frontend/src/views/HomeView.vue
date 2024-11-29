@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import Cookies from 'js-cookie'; // Import js-cookie to handle cookies
 import { useRouter } from 'vue-router'
+import BigButton from '../components/BigButton.vue'
   
   const router = useRouter();
   const playerID = Cookies.get('playerID');
@@ -131,15 +132,16 @@ function sleep(ms) {
         <h2 v-if="isHost" style="white-space: pre-line; text-align: center;">{{ Voters }}</h2>
       </div>
     </div>
-    <div v-if="!isHost">
-      <button
+    <div v-if="!isHost" class="vote-buttons">
+      <BigButton class="votebutton"
       v-for="num in 6"
       :key="num"
       @click="SetPoints(num - 1)"
-      :style="{ backgroundColor: activeVote === num - 1 ? 'lightblue' : '' }"
+      :selected="activeVote == num - 1"
+      :text="num - 1"
     >
       {{ num - 1 }}
-    </button>
+      </BigButton>
     </div>
     <div v-if="isAdmin">
       <button @click="SendAdminCommand('exit')">Stäng av</button>
@@ -154,11 +156,10 @@ function sleep(ms) {
 
 <style scoped>
 .view{
-  height: 100vh;
-  width: 100vw;
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
 }
 
 .info, .points{
@@ -172,6 +173,28 @@ h1{
   font-size: 100px;
 }
 
+.votebutton{
+  margin: 20px;
+}
 
+.vote-buttons{
+  display: flex;
+  flex-direction: column-reverse;
+  margin-top: 100px;
+}
+
+@media only screen and (max-width: 600px) {
+  .view{
+    justify-content: start;
+  }
+
+  .info{
+    margin-top: 60px;
+  }
+
+  h1{
+    font-size: 25px;
+  }
+}
 </style>
 
